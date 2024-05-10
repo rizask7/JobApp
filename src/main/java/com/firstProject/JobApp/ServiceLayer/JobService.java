@@ -14,7 +14,7 @@ import java.util.Optional;
 public class JobService implements IJobService {
 
     @Autowired
-    JobRepository jobRepository;
+    private JobRepository jobRepository;
 
     @Override
     public List<Job> getAllJobs(){

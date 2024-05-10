@@ -14,11 +14,12 @@ import java.util.Optional;
 @RequestMapping("/jobs")
 public class JobController {
 
-    JobService jobService;
+    @Autowired
+    private JobService jobService;
 
-    public JobController(JobService jobService) {
-        this.jobService = jobService;
-    }
+//    public JobController(JobService jobService) {
+//        this.jobService = jobService;
+//    }
 
 
     @PostMapping
