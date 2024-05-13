@@ -20,6 +20,10 @@ public class Company {
      @OneToMany(mappedBy = "company")
      private List<Job> jobs;
 
+//    @JsonIgnore
+    @OneToMany(mappedBy = "company")
+    private List<Review> reviews;
+
     public List<Review> getReviews() {
         return reviews;
     }
@@ -27,10 +31,6 @@ public class Company {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-
-    @JsonIgnore
-     @OneToMany(mappedBy = "company")
-     private List<Review> reviews;
 
     public List<Job> getJobs() {
         return jobs;

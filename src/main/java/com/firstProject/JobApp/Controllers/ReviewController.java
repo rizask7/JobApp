@@ -5,23 +5,23 @@ import com.firstProject.JobApp.ServiceLayer.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/companies/{companyId}")
+@RequestMapping("/company/{companyId}")
 public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
 
-    public ResponseEntity<List<Review>> getAllReviews(@PathVariable Long id)
+    @GetMapping("/reviews")
+    public ResponseEntity<List<Review>> getAllReviews(@PathVariable Long companyId)
     {
 
-            List<Review> reviews = reviewService.getAllReviews(id);
+            List<Review> reviews = reviewService.getAllReviews(companyId);
             if(!reviews.isEmpty())
             {
                 return new ResponseEntity<>(reviews, HttpStatus.OK);
@@ -31,5 +31,39 @@ public class ReviewController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
+    }
+    @PostMapping("/reviews")
+    public ResponseEntity<Review> addReview(@RequestBody Review review, @PathVariable Long companyId)
+    {
+        try
+        {
+            boolean isReviewSaved = reviewService.addReview(review, companyId);
+            if(isReviewSaved)
+            {
+                return new ResponseEntity<>(review,HttpStatus.CREATED);
+            }
+        }
+        catch(IllegalArgumentException ex)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(review, HttpStatus.NOT_FOUND);
+
+
+    }
+
+    @GetMapping("/reviews/{reviewId}")
+    public ResponseEntity<Review> getReview(@PathVariable Long companyId, @PathVariable Long reviewId)
+    {
+        try
+        {
+            Optional<Review> review = reviewService.getReviewById(companyId, reviewId);
+            return review.map(value -> new ResponseEntity<>(value,HttpStatus.OK))
+                    .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }
+        catch(IllegalArgumentException ex)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
