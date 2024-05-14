@@ -13,7 +13,9 @@ public interface IReviewService {
 
     Optional<Review> getReviewById(Long companyId, Long reviewId);
 
-//    Optional<Review> updateReview(Long companyId, Long reviewId, Review review);
+    Optional<Review> updateReview(Long companyId, Long reviewId, Review updatedReview);
+
+    boolean deleteReview(Long companyId, Long reviewId);
 
 
 }

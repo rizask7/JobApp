@@ -66,4 +66,41 @@ public class ReviewController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<Review> updateReview(@PathVariable Long companyId,
+                                               @PathVariable Long reviewId, @RequestBody Review review)
+    {
+        try
+        {
+            Optional<Review> updatedReview = reviewService.updateReview(companyId, reviewId, review);
+            return updatedReview.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                    .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }
+        catch(IllegalArgumentException ex)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long companyId, @PathVariable Long reviewId)
+    {
+        try
+        {
+            if(reviewService.deleteReview(companyId,reviewId))
+            {
+                return ResponseEntity.ok("Review with ID "+reviewId+" deleted successfully");
+            }
+            else
+            {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Review with ID "+reviewId+" not found!");
+            }
+        }
+        catch(IllegalArgumentException ex)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
